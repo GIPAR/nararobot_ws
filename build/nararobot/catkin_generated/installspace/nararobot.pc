@@ -1,8 +1,0 @@
-prefix=/home/gipar/nara2_ws/install
-
-Name: nararobot
-Description: Description of nararobot
-Version: 1.4.1
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lnararobot
-Requires: roscpp rospy tf2 tf2_ros nav_msgs nara_msgs geometry_msgs sensor_msgs std_msgs

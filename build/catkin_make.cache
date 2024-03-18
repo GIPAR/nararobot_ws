@@ -1,2 +1,0 @@
-Finder_v3:detection_msgs:imu_calib:nara_msgs:nara_pid:nararobot:proxemic_layer/src/msgs:proxemic_layer/src/people_publisher:proxemic_layer/src/proxemic_layer:yolov5_ros:zed-ros-wrapper/zed-ros-interfaces:zed-ros-wrapper/zed_nodelets:zed-ros-wrapper/zed_ros:zed-ros-wrapper/zed_wrapper
--DCATKIN_DEVEL_PREFIX=/home/gipar/nara2_ws/devel -DCMAKE_INSTALL_PREFIX=/home/gipar/nara2_ws/install -G Unix Makefiles

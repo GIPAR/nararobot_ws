@@ -1,8 +1,0 @@
-prefix=/home/gipar/nara2_ws/install
-
-Name: people_publisher
-Description: Description of people_publisher
-Version: 0.0.0
-Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib 
-Requires: 
