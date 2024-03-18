@@ -1,8 +1,0 @@
-prefix=/home/gipar/nara2_ws/devel
-
-Name: nara_pid
-Description: Description of nara_pid
-Version: 0.0.1
-Cflags: -I/home/gipar/nara2_ws/devel/include -I/home/gipar/nara2_ws/src/nara_pid/include
-Libs: -L${prefix}/lib 
-Requires: dynamic_reconfigure message_runtime roscpp std_msgs nara_msgs

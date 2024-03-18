@@ -1,8 +1,0 @@
-\subsubsection parameters ROS parameters
-
-Reads and maintains the following parameters on the ROS server
-
-- \b "~enabled" : \b [bool] Whether to apply this plugin or not  min: False, default: True, max: True
-- \b "~max_time_passed" : \b [int] maximum age of subscribed people msg min: 0, default: 60, max: 300
-- \b "~gaussian_renorming" : \b [int] amplification factor / renorming from gaussian to occupancy grid min: 100, default: 253, max: 253
-

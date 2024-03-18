@@ -1,9 +1,0 @@
-\subsubsection usage Usage
-\verbatim
-<node name="proxemic_layer" pkg="proxemic_layer" type="proxemic_layer">
-  <param name="enabled" type="bool" value="True" />
-  <param name="max_time_passed" type="int" value="60" />
-  <param name="gaussian_renorming" type="int" value="253" />
-</node>
-\endverbatim
-
