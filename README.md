@@ -87,5 +87,3 @@ Após a localização, clique em "2D Nav Goal".
 Identifique a localização desejada no mapa e arraste para a direção que você deseja que seu robô esteja indo assim que atingir seu objetivo.
 
 # nara2_ws
-# nara2_ws
-# nara2_ws
