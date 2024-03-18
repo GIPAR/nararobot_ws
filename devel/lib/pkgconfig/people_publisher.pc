@@ -1,0 +1,8 @@
+prefix=/home/gipar/nara2_ws/devel
+
+Name: people_publisher
+Description: Description of people_publisher
+Version: 0.0.0
+Cflags: -I/home/gipar/nara2_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: 

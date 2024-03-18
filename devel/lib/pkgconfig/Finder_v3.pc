@@ -1,0 +1,8 @@
+prefix=/home/gipar/nara2_ws/devel
+
+Name: Finder_v3
+Description: Description of Finder_v3
+Version: 1.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/gipar/nara2_ws/devel
+
+Name: proxemic_layer
+Description: Description of proxemic_layer
+Version: 0.0.1
+Cflags: -I/home/gipar/nara2_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: costmap_2d dynamic_reconfigure roscpp msgs

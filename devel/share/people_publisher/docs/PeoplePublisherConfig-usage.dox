@@ -1,0 +1,24 @@
+\subsubsection usage Usage
+\verbatim
+<node name="people_publisher" pkg="people_publisher" type="people_publisher">
+  <param name="frame_id" type="str" value="map" />
+  <param name="person_name" type="str" value="Oscar" />
+  <param name="centerShiftX" type="double" value="0.0" />
+  <param name="centerShiftY" type="double" value="0.0" />
+  <param name="rotation" type="double" value="0.0" />
+  <param name="spreadX" type="double" value="1.0" />
+  <param name="spreadY" type="double" value="1.0" />
+  <param name="velocityX" type="double" value="0.0" />
+  <param name="velocityY" type="double" value="0.0" />
+  <param name="velocityZ" type="double" value="0.0" />
+  <param name="positionX" type="double" value="1.5" />
+  <param name="positionY" type="double" value="0.0" />
+  <param name="positionZ" type="double" value="0.0" />
+  <param name="rotationX" type="double" value="0.0" />
+  <param name="rotationY" type="double" value="0.0" />
+  <param name="rotationZ" type="double" value="0.0" />
+  <param name="lethalBorder" type="int" value="150" />
+  <param name="freeBorder" type="int" value="30" />
+</node>
+\endverbatim
+

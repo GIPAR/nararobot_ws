@@ -1,0 +1,23 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~frame_id" : \b [str] frame_id min: , default: map, max: 
+- \b "~person_name" : \b [str] person_name min: , default: Oscar, max: 
+- \b "~centerShiftX" : \b [double] proxemic: centerShiftX min: -10.0, default: 0.0, max: 10.0
+- \b "~centerShiftY" : \b [double] proxemic: centerShiftY min: -10.0, default: 0.0, max: 10.0
+- \b "~rotation" : \b [double] proxemic: rotation min: -10.0, default: 0.0, max: 10.0
+- \b "~spreadX" : \b [double] proxemic: spreadX min: -10.0, default: 1.0, max: 10.0
+- \b "~spreadY" : \b [double] proxemic: spreadX min: -10.0, default: 1.0, max: 10.0
+- \b "~velocityX" : \b [double] person: velocity in X min: -10.0, default: 0.0, max: 10.0
+- \b "~velocityY" : \b [double] person: velocity in Y min: -10.0, default: 0.0, max: 10.0
+- \b "~velocityZ" : \b [double] person: velocity in Z min: -10.0, default: 0.0, max: 10.0
+- \b "~positionX" : \b [double] person: position X min: -10.0, default: 1.5, max: 10.0
+- \b "~positionY" : \b [double] person: position Y min: -10.0, default: 0.0, max: 10.0
+- \b "~positionZ" : \b [double] person: position Z min: -10.0, default: 0.0, max: 10.0
+- \b "~rotationX" : \b [double] person: rotation X min: -10.0, default: 0.0, max: 10.0
+- \b "~rotationY" : \b [double] person: rotation Y min: -10.0, default: 0.0, max: 10.0
+- \b "~rotationZ" : \b [double] person: rotation Z min: -10.0, default: 0.0, max: 10.0
+- \b "~lethalBorder" : \b [int] max cost that does not count as lethal obstacle min: 0, default: 150, max: 253
+- \b "~freeBorder" : \b [int] min cost to get in costmaps min: 0, default: 30, max: 253
+
