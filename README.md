@@ -1,9 +1,10 @@
 # NARAROBOT 
 
 ## 1 Hardware
+- Jetson AGX Orin 64GB
 - Arduino Mega;
 - IMU MPU6050;
-- LIDAR A2;
+- RPLIDAR A2;
 - Ponte H BTS7960.
 
 ## 2 Software
@@ -15,13 +16,13 @@
 ### 3.1 Clone os diretórios do NARAROBOT
 
 ```
-git clone https://github.com/fabioabdon/nararobot_ws.git
+git clone https://github.com/GIPAR/nararobot_ws.git
 ```
 
 ### 3.2 Instale os repositórios necessários
 
 ```
-cd lino_install
+cd nara_install
 ./install <base> <sensor>
 ```
 
@@ -36,12 +37,12 @@ Ao iniciar a ide, clique em "arquivos > preferencias" e modifique o local do ske
 
 #### Inicie o driver básico:
 ```
-roslaunch linorobot bringup.launch
+roslaunch nararobot bringup.launch
 ```
 
 #### Inicie pacotes de mapeamento:
 ```
-roslaunch linorobot slam.launch
+roslaunch nararobot slam.launch
 ```
 
 #### Inicie a teleoperação:
@@ -67,12 +68,12 @@ Navegue até o diretório "src/nararobot/launch" e abra o arquivo "navigate.laun
 
 #### Inicie o driver básico:
 ```
-roslaunch linorobot bringup.launch
+roslaunch nararobot bringup.launch
 ```
 
 #### Inicie pacotes de navegação:
 ```
-roslaunch linorobot navigate.launch
+roslaunch nararobot navigate.launch
 ```
 
 ### 5.2 Definir a pose inicial
@@ -86,4 +87,4 @@ Antes de iniciar a navegação autônoma, é preciso estimar a posição inicial
 Após a localização, clique em "2D Nav Goal".
 Identifique a localização desejada no mapa e arraste para a direção que você deseja que seu robô esteja indo assim que atingir seu objetivo.
 
-# nara2_ws
+# nararobot_ws
