@@ -21,9 +21,11 @@ git clone https://github.com/GIPAR/nararobot_ws.git
 
 ### 3.2 Instale os repositórios necessários
 
+Clique com o botão direito sobre o arquivo install, em seguida selecione a guia "permissões" e marque a caixa "Permitir execução do arquivo como um programa".
+
 ```
 cd nara_install
-./install <base> <sensor>
+./install
 ```
 
 ### 3.3 Carregando o código para o Arduino
@@ -64,16 +66,8 @@ Navegue até o diretório "src/nararobot/launch" e abra o arquivo "navigate.laun
 
 ## 5 Navegação Autônoma
 
-### 5.1 Iniciando o AMCL
-
-#### Inicie o driver básico:
 ```
-roslaunch nararobot bringup.launch
-```
-
-#### Inicie pacotes de navegação:
-```
-roslaunch nararobot navigate.launch
+roslaunch nararobot nara.launch
 ```
 
 ### 5.2 Definir a pose inicial
