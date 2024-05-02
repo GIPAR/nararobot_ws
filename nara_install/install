@@ -59,6 +59,7 @@ ros-$ROSDISTRO-navigation \
 ros-$ROSDISTRO-robot-localization \
 ros-$ROSDISTRO-tf2 \
 ros-$ROSDISTRO-tf2-ros 
+sudo apt-get install ros-$ROSDISTRO-teleop-twist-keyboard
 sudo apt-get install -y ros-$ROSDISTRO-rplidar-ros
 
 cd $HOME/nararobot_ws/src/nararobot
