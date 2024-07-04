@@ -148,7 +148,7 @@ class Yolov5Detector:
                 
                 if (self.names[c] == "person"):
                 # Fill in bounding box message
-                    bounding_box.Class = "D.O.L.B"
+                    bounding_box.Class = "Dynamic Object - Living Being"
                     bounding_box.probability = conf 
                     bounding_box.xmin = int(xyxy[0])
                     bounding_box.ymin = int(xyxy[1])
@@ -160,13 +160,13 @@ class Yolov5Detector:
                 # Annotate the image
                     if self.publish_image or self.view_image:  # Add bbox to image
                       # integer class
-                        label = f"D.O.L.B. {conf:.2f}"
+                        label = f"Dynamic Object - Living Being {conf:.2f}"
                         annotator.box_label(xyxy, label, color=colors(c, True))       
 
                 
                 if (self.names[c] == "chair"):
                 # Fill in bounding box message
-                    bounding_box.Class = "S.O.I.B"
+                    bounding_box.Class = "Static Object - Inanimate Being"
                     bounding_box.probability = conf 
                     bounding_box.xmin = int(xyxy[0])
                     bounding_box.ymin = int(xyxy[1])
@@ -178,13 +178,13 @@ class Yolov5Detector:
                 # Annotate the image
                     if self.publish_image or self.view_image:  # Add bbox to image
                       # integer class
-                        label = f"S.O.I.B {conf:.2f}"
+                        label = f"Static Object - Inanimate Being {conf:.2f}"
                         annotator.box_label(xyxy, label, color=colors(c, True))       
                 
                 
                 if (self.names[c] == "vase"):
                 # Fill in bounding box message
-                    bounding_box.Class = "S.O.L.B"
+                    bounding_box.Class = "Static Object - Living Being"
                     bounding_box.probability = conf 
                     bounding_box.xmin = int(xyxy[0])
                     bounding_box.ymin = int(xyxy[1])
@@ -196,12 +196,12 @@ class Yolov5Detector:
                 # Annotate the image
                     if self.publish_image or self.view_image:  # Add bbox to image
                       # integer class
-                        label = f"S.O.L.B {conf:.2f}"
+                        label = f"Static Object - Living Being {conf:.2f}"
                         annotator.box_label(xyxy, label, color=colors(c, True))       
                 
                 if (self.names[c] == "car"):
                 # Fill in bounding box message
-                    bounding_box.Class = "D.O.I.B"
+                    bounding_box.Class = "Dynamic Object - Inanimate Being"
                     bounding_box.probability = conf 
                     bounding_box.xmin = int(xyxy[0])
                     bounding_box.ymin = int(xyxy[1])
@@ -213,8 +213,27 @@ class Yolov5Detector:
                 # Annotate the image
                     if self.publish_image or self.view_image:  # Add bbox to image
                       # integer class
-                        label = f"D.O.I.B {conf:.2f}"
+                        label = f"Dynamic Object - Inanimate Being {conf:.2f}"
                         annotator.box_label(xyxy, label, color=colors(c, True)) 
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
                 ### POPULATE THE DETECTION MESSAGE HERE
 
             # Stream results
@@ -242,6 +261,7 @@ class Yolov5Detector:
         img = np.ascontiguousarray(img)
 
         return img, img0 
+
 
 if __name__ == "__main__":
 
