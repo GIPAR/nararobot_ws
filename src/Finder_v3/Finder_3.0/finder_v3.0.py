@@ -3,6 +3,7 @@
 
 import time, os
 import math, os, os.path, rospy
+import cv2
 from cv_bridge import CvBridge
 from detection_msgs.msg import BoundingBoxes
 from geometry_msgs.msg import *
