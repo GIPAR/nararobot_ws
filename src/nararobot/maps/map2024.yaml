@@ -1,4 +1,4 @@
-image: /home/nara/nararobot_ws/src/nararobot/maps/map.pgm
+image: /home/nara/nararobot_ws/src/nararobot/maps/map2024.pgm
 resolution: 0.050000
 origin: [-2.000000, -13.200000, 0.000000]
 negate: 0

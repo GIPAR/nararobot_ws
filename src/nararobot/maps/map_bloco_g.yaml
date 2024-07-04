@@ -1,4 +1,4 @@
-image: /home/gipar/nara2_ws/src/nararobot/maps/map_bloco_g.pgm
+image: /home/nara/nararobot_ws/src/nararobot/maps/map_bloco_g.pgm
 resolution: 0.050000
 origin: [-24.400000, -26.000000, 0.000000]
 negate: 0

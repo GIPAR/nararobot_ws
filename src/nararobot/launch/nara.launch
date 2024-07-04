@@ -2,6 +2,7 @@
     <include file="$(find nararobot)/launch/bringup.launch" />
     <include file="$(find nararobot)/launch/navigate.launch" />
 
+    <node pkg="robot_pose_publisher" type="robot_pose_publisher" name="robot_pose_publisher" output="screen"/>
     <node pkg="rviz" type="rviz" name="nara_rviz" args="-d $(find nararobot)/rviz/navigate.rviz"/>
 
 </launch>
