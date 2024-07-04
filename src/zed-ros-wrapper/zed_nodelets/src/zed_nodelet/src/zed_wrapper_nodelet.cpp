@@ -957,19 +957,19 @@ void ZEDWrapperNodelet::readPosTrkParams()
 
     std::string pos_trk_mode;
     mNhNs.getParam("pos_tracking/pos_tracking_mode", pos_trk_mode);
-    if (pos_trk_mode == "QUALITY")
+    if (pos_trk_mode == "GEN_1")
     {
-      mPosTrkMode = sl::POSITIONAL_TRACKING_MODE::QUALITY;
+      mPosTrkMode = sl::POSITIONAL_TRACKING_MODE::GEN_1;
     }
-    else if (pos_trk_mode == "STANDARD")
+    else if (pos_trk_mode == "GEN_2")
     {
-      mPosTrkMode = sl::POSITIONAL_TRACKING_MODE::STANDARD;
+      mPosTrkMode = sl::POSITIONAL_TRACKING_MODE::GEN_2;
     }
     else
     {
       NODELET_WARN_STREAM("'pos_tracking/pos_tracking_mode' not valid ('" << pos_trk_mode
                                                                           << "'). Using default value.");
-      mPosTrkMode = sl::POSITIONAL_TRACKING_MODE::QUALITY;
+      mPosTrkMode = sl::POSITIONAL_TRACKING_MODE::GEN_2;
     }
     NODELET_INFO_STREAM(" * Positional tracking mode\t-> " << sl::toString(mPosTrkMode).c_str());
 
@@ -979,8 +979,8 @@ void ZEDWrapperNodelet::readPosTrkParams()
     mNhNs.getParam("pos_tracking/path_pub_rate", mPathPubRate);
     NODELET_INFO_STREAM(" * Path rate\t\t\t-> " << mPathPubRate << " Hz");
     mNhNs.getParam("pos_tracking/path_max_count", mPathMaxCount);
-    NODELET_INFO_STREAM(" * Path history size\t\t-> " << (mPathMaxCount == -1) ? std::string("INFINITE") :
-                                                                                 std::to_string(mPathMaxCount));
+    NODELET_INFO_STREAM(" * Path history size\t\t-> " << ((mPathMaxCount == -1) ? std::string("INFINITE") :
+                                                                                 std::to_string(mPathMaxCount)));
 
     if (mPathMaxCount < 2 && mPathMaxCount != -1)
     {
@@ -1023,9 +1023,6 @@ void ZEDWrapperNodelet::readPosTrkParams()
     NODELET_INFO_STREAM(" * Camera is static\t\t-> " << (mIsStatic ? "ENABLED" : "DISABLED"));
     mNhNs.getParam("pos_tracking/depth_min_range", mPosTrkMinDepth);
     NODELET_INFO_STREAM(" * Depth minimum range\t\t-> " << mPosTrkMinDepth);
-
-    bool mIsStatic = false;
-    double mPosTrkMinDepth = 0.0;
   }
 }
 
@@ -1448,7 +1445,7 @@ void ZEDWrapperNodelet::checkResolFps()
     case sl::RESOLUTION::HD2K:
       if (mCamFrameRate != 15)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD2K. Set to 15 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD2K. Forced to 15 FPS.");
         mCamFrameRate = 15;
       }
 
@@ -1457,25 +1454,25 @@ void ZEDWrapperNodelet::checkResolFps()
     case sl::RESOLUTION::HD1080:
       if (mZedUserCamModel == sl::MODEL::ZED_X || mZedUserCamModel == sl::MODEL::ZED_XM)
       {
-        if (mCamFrameRate == 60 || mCamFrameRate == 30)
+        if (mCamFrameRate == 60 || mCamFrameRate == 30 || mCamFrameRate == 15)
         {
           break;
         }
 
-        if (mCamFrameRate > 30 && mCamFrameRate < 60)
+        if (mCamFrameRate < 23)
         {
-          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Set to 30 FPS.");
+          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 15 FPS.");
+          mCamFrameRate = 15;
+        } 
+        else if (mCamFrameRate >= 23 && mCamFrameRate < 45)
+        {
+          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 30 FPS.");
           mCamFrameRate = 30;
         }
-        else if (mCamFrameRate > 60)
+        else if (mCamFrameRate >= 45)
         {
-          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Set to 60 FPS.");
+          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 60 FPS.");
           mCamFrameRate = 60;
-        }
-        else
-        {
-          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Set to 30 FPS.");
-          mCamFrameRate = 30;
         }
       }
       else
@@ -1485,20 +1482,15 @@ void ZEDWrapperNodelet::checkResolFps()
           break;
         }
 
-        if (mCamFrameRate > 15 && mCamFrameRate < 30)
+        if (mCamFrameRate < 23)
         {
-          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Set to 15 FPS.");
+          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 15 FPS.");
           mCamFrameRate = 15;
-        }
-        else if (mCamFrameRate > 30)
-        {
-          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Set to 30 FPS.");
-          mCamFrameRate = 30;
         }
         else
         {
-          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Set to 15 FPS.");
-          mCamFrameRate = 15;
+          NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 30 FPS.");
+          mCamFrameRate = 30;
         }
       }
 
@@ -1510,25 +1502,25 @@ void ZEDWrapperNodelet::checkResolFps()
         break;
       }
 
-      if (mCamFrameRate > 15 && mCamFrameRate < 30)
+      if (mCamFrameRate < 23)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD720. Set to 15 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 15 FPS.");
         mCamFrameRate = 15;
-      }
-      else if (mCamFrameRate > 30 && mCamFrameRate < 60)
+      } 
+      else if (mCamFrameRate >= 23 && mCamFrameRate < 45)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD720. Set to 30 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 30 FPS.");
         mCamFrameRate = 30;
       }
-      else if (mCamFrameRate > 60)
+      else if (mCamFrameRate >= 45)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD720. Set to 60 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 60 FPS.");
         mCamFrameRate = 60;
       }
       else
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD720. Set to 15 FPS.");
-        mCamFrameRate = 15;
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 30 FPS.");
+        mCamFrameRate = 30;
       }
 
       break;
@@ -1539,30 +1531,25 @@ void ZEDWrapperNodelet::checkResolFps()
         break;
       }
 
-      if (mCamFrameRate > 15 && mCamFrameRate < 30)
+      if (mCamFrameRate < 23)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Set to 15 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Forced to 15 FPS.");
         mCamFrameRate = 15;
       }
-      else if (mCamFrameRate > 30 && mCamFrameRate < 60)
+      else if (mCamFrameRate >= 23 && mCamFrameRate < 45)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Set to 30 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Forced to 30 FPS.");
         mCamFrameRate = 30;
       }
-      else if (mCamFrameRate > 60 && mCamFrameRate < 100)
+      else if (mCamFrameRate >= 45 && mCamFrameRate < 80)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Set to 60 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Forced to 60 FPS.");
         mCamFrameRate = 60;
       }
-      else if (mCamFrameRate > 100)
+      else if (mCamFrameRate >= 80)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Set to 100 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Forced to 100 FPS.");
         mCamFrameRate = 100;
-      }
-      else
-      {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution VGA. Set to 15 FPS.");
-        mCamFrameRate = 15;
       }
 
       break;
@@ -1573,44 +1560,44 @@ void ZEDWrapperNodelet::checkResolFps()
         break;
       }
 
-      if (mCamFrameRate > 30 && mCamFrameRate < 60)
+      if (mCamFrameRate < 45)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1200. Set to 30 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1200. Forced to 30 FPS.");
         mCamFrameRate = 30;
-      }
-      else if (mCamFrameRate > 60)
-      {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1200. Set to 60 FPS.");
-        mCamFrameRate = 60;
       }
       else
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1200. Set to 30 FPS.");
-        mCamFrameRate = 30;
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1200. Forced to 60 FPS.");
+        mCamFrameRate = 60;
       }
 
       break;
 
     case sl::RESOLUTION::SVGA:
-      if (mCamFrameRate == 120 || mCamFrameRate == 60)
+      if (mCamFrameRate == 120 || mCamFrameRate == 60 || mCamFrameRate == 30 || mCamFrameRate == 15)
       {
         break;
       }
 
-      if (mCamFrameRate > 60 && mCamFrameRate < 120)
+      if (mCamFrameRate < 23)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution SVGA. Set to 60 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 15 FPS.");
+        mCamFrameRate = 15;
+      } 
+      else if (mCamFrameRate >= 23 && mCamFrameRate < 45)
+      {
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 30 FPS.");
+        mCamFrameRate = 30;
+      }
+      else if (mCamFrameRate >= 45 && mCamFrameRate < 90)
+      {
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1080. Forced to 60 FPS.");
         mCamFrameRate = 60;
       }
-      else if (mCamFrameRate > 120)
+      else if (mCamFrameRate >= 90)
       {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution SVGA. Set to 120 FPS.");
+        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution HD1200. Forced to 120 FPS.");
         mCamFrameRate = 120;
-      }
-      else
-      {
-        NODELET_WARN_STREAM("Wrong FrameRate (" << mCamFrameRate << ") for the resolution SVGA. Set to 60 FPS.");
-        mCamFrameRate = 60;
       }
 
       break;
@@ -1644,8 +1631,7 @@ bool ZEDWrapperNodelet::getCamera2BaseTransform()
 {
   NODELET_DEBUG("Getting static TF from '%s' to '%s'", mCameraFrameId.c_str(), mBaseFrameId.c_str());
 
-  mCamera2BaseTransfValid = false;
-  static bool first_error = true;
+  mCamera2BaseTransfValid = false;  
 
   // ----> Static transforms
   // Sensor to Base link
@@ -1668,6 +1654,7 @@ bool ZEDWrapperNodelet::getCamera2BaseTransform()
   }
   catch (tf2::TransformException& ex)
   {
+    static bool first_error = true;
     if (!first_error)
     {
       NODELET_DEBUG_THROTTLE(1.0, "Transform error: %s", ex.what());
@@ -1695,9 +1682,7 @@ bool ZEDWrapperNodelet::getSens2CameraTransform()
 {
   NODELET_DEBUG("Getting static TF from '%s' to '%s'", mDepthFrameId.c_str(), mCameraFrameId.c_str());
 
-  mSensor2CameraTransfValid = false;
-
-  static bool first_error = true;
+  mSensor2CameraTransfValid = false;  
 
   // ----> Static transforms
   // Sensor to Camera Center
@@ -1719,6 +1704,7 @@ bool ZEDWrapperNodelet::getSens2CameraTransform()
   }
   catch (tf2::TransformException& ex)
   {
+    static bool first_error = true;
     if (!first_error)
     {
       NODELET_DEBUG_THROTTLE(1.0, "Transform error: %s", ex.what());
@@ -1747,8 +1733,7 @@ bool ZEDWrapperNodelet::getSens2BaseTransform()
 {
   NODELET_DEBUG("Getting static TF from '%s' to '%s'", mDepthFrameId.c_str(), mBaseFrameId.c_str());
 
-  mSensor2BaseTransfValid = false;
-  static bool first_error = true;
+  mSensor2BaseTransfValid = false; 
 
   // ----> Static transforms
   // Sensor to Base link
@@ -1770,6 +1755,7 @@ bool ZEDWrapperNodelet::getSens2BaseTransform()
   }
   catch (tf2::TransformException& ex)
   {
+    static bool first_error = true;
     if (!first_error)
     {
       NODELET_DEBUG_THROTTLE(1.0, "Transform error: %s", ex.what());
@@ -2021,7 +2007,6 @@ bool ZEDWrapperNodelet::start_obj_detect()
   sl::ObjectDetectionParameters od_p;
   od_p.enable_segmentation = false;
   od_p.enable_tracking = mObjDetTracking;
-  od_p.image_sync = true;
   od_p.detection_model = mObjDetModel;
   od_p.filtering_mode = mObjFilterMode;
   od_p.prediction_timeout_s = mObjDetPredTimeout;
@@ -2342,11 +2327,6 @@ void ZEDWrapperNodelet::publishPose()
   size_t poseSub = mPubPose.getNumSubscribers();
   size_t poseCovSub = mPubPoseCov.getNumSubscribers();
 
-  tf2::Transform base_pose;
-  base_pose.setIdentity();
-
-  base_pose = mMap2BaseTransf;
-
   std_msgs::Header header;
   header.stamp = mFrameTimestamp;
   header.frame_id = mMapFrameId;  // frame
@@ -2638,11 +2618,10 @@ void ZEDWrapperNodelet::callback_pubFusedPointCloud(const ros::TimerEvent& e)
     resized = true;
   }
 
-  std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
+  //std::chrono::steady_clock::time_point start_time = std::chrono::steady_clock::now();
 
   // NODELET_INFO_STREAM("Chunks: " << mFusedPC.chunks.size());
 
-  int index = 0;
   float* ptCloudPtr = (float*)(&pointcloudFusedMsg->data[0]);
   int updated = 0;
 
@@ -2665,13 +2644,9 @@ void ZEDWrapperNodelet::callback_pubFusedPointCloud(const ros::TimerEvent& e)
         pointcloudFusedMsg->header.stamp = sl_tools::slTime2Ros(mFusedPC.chunks[c].timestamp);
       }
     }
-    else
-    {
-      index += mFusedPC.chunks[c].vertices.size();
-    }
   }
 
-  std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
+  //std::chrono::steady_clock::time_point end_time = std::chrono::steady_clock::now();
 
   // NODELET_INFO_STREAM("Updated: " << updated);
 
@@ -2780,7 +2755,6 @@ void ZEDWrapperNodelet::fillCamDepthInfo(sl::Camera& zed, sensor_msgs::CameraInf
 
   zedParam = zed.getCameraInformation(mMatResol).camera_configuration.calibration_parameters;
 
-  float baseline = zedParam.getCameraBaseline();
   depth_info_msg->distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
   depth_info_msg->D.resize(5);
   depth_info_msg->D[0] = zedParam.left_cam.disto[0];  // k1
@@ -2932,7 +2906,7 @@ void ZEDWrapperNodelet::callback_dynamicReconf(zed_nodelets::ZedConfig& config, 
       if (config.auto_exposure_gain != mCamAutoExposure)
       {
         mCamAutoExposure = config.auto_exposure_gain;
-        NODELET_INFO_STREAM("Reconfigure auto exposure/gain: " << mCamAutoExposure ? "ENABLED" : "DISABLED");
+        NODELET_INFO_STREAM("Reconfigure auto exposure/gain: " << (mCamAutoExposure ? "ENABLED" : "DISABLED"));
       }
       mDynParMutex.unlock();
       // NODELET_DEBUG_STREAM( "dynamicReconfCallback MUTEX UNLOCK");
@@ -2970,7 +2944,7 @@ void ZEDWrapperNodelet::callback_dynamicReconf(zed_nodelets::ZedConfig& config, 
       if (config.auto_whitebalance != mCamAutoWB)
       {
         mCamAutoWB = config.auto_whitebalance;
-        NODELET_INFO_STREAM("Reconfigure auto white balance: " << mCamAutoWB ? "ENABLED" : "DISABLED");
+        NODELET_INFO_STREAM("Reconfigure auto white balance: " << (mCamAutoWB ? "ENABLED" : "DISABLED"));
         mTriggerAutoWB = true;
       }
       else
@@ -3043,8 +3017,8 @@ void ZEDWrapperNodelet::pubVideoDepth()
   sl::Mat mat_right_gray, mat_right_raw_gray;
   sl::Mat mat_depth, mat_disp, mat_conf;
 
-  sl::Timestamp ts_rgb = 0;    // used to check RGB/Depth sync
-  sl::Timestamp ts_depth = 0;  // used to check RGB/Depth sync
+  sl::Timestamp ts_rgb = 0;      // used to check RGB/Depth sync
+  sl::Timestamp ts_depth;    // used to check RGB/Depth sync
   sl::Timestamp grab_ts = 0;
 
   // ----> Retrieve all required image data
@@ -4064,7 +4038,7 @@ void ZEDWrapperNodelet::device_poll_thread_func()
               {
                 mStopNode = true;
 
-                std::lock_guard<std::mutex> lock(mCloseZedMutex);
+                std::lock_guard<std::mutex> stop_lock(mCloseZedMutex);
                 NODELET_INFO_STREAM("Closing ZED " << mZedSerialNumber << "...");
                 if (mRecording)
                 {
@@ -4215,20 +4189,20 @@ void ZEDWrapperNodelet::device_poll_thread_func()
 
       double elab_usec = std::chrono::duration_cast<std::chrono::microseconds>(end_elab - start_elab).count();
 
-      double mean_elab_sec = mElabPeriodMean_sec->addValue(elab_usec / 1000000.);
-
-      static int count_warn = 0;
+      double mean_elab_sec = mElabPeriodMean_sec->addValue(elab_usec / 1000000.);      
 
       if (!loop_rate.sleep())
       {
+        static int count_warn = 0;
         if (mean_elab_sec > (1. / mPubFrameRate))
         {
+          
           if (++count_warn > 10)
           {
             NODELET_DEBUG_THROTTLE(1.0, "Working thread is not synchronized with the Camera grab rate");
             NODELET_DEBUG_STREAM_THROTTLE(1.0, "Expected cycle time: " << loop_rate.expectedCycleTime()
                                                                        << " - Real cycle time: " << mean_elab_sec);
-            NODELET_WARN_STREAM_THROTTLE(10.0, "Elaboration takes longer ("
+            NODELET_DEBUG_STREAM_THROTTLE(10.0, "Elaboration takes longer ("
                                                    << mean_elab_sec << " sec) than requested by the FPS rate ("
                                                    << loop_rate.expectedCycleTime()
                                                    << " sec). Please consider to "
@@ -4300,7 +4274,7 @@ void ZEDWrapperNodelet::processPointcloud(ros::Time ts)
 
 void ZEDWrapperNodelet::processCameraSettings()
 {
-  int value;
+  
   sl::VIDEO_SETTINGS setting;
   sl::ERROR_CODE err;
 
@@ -4309,6 +4283,7 @@ void ZEDWrapperNodelet::processCameraSettings()
     // NODELET_DEBUG_STREAM( "[" << mFrameCount << "] device_poll_thread_func MUTEX LOCK");
     mDynParMutex.lock();
 
+    int value;
     setting = sl::VIDEO_SETTINGS::BRIGHTNESS;
     err = mZed.getCameraSettings(setting, value);
     if (err == sl::ERROR_CODE::SUCCESS && value != mCamBrightness)
@@ -4550,8 +4525,8 @@ void ZEDWrapperNodelet::callback_updateDiagnostic(diagnostic_updater::Diagnostic
 
         if (mPcPublishing)
         {
-          double freq = 1000000. / mPcPeriodMean_usec->getMean();
-          double freq_perc = 100. * freq / mPointCloudFreq;
+          freq = 1000000. / mPcPeriodMean_usec->getMean();
+          freq_perc = 100. * freq / mPointCloudFreq;
           stat.addf("Point Cloud", "Mean Frequency: %.1f Hz (%.1f%%)", freq, freq_perc);
         }
         else
@@ -4583,8 +4558,8 @@ void ZEDWrapperNodelet::callback_updateDiagnostic(diagnostic_updater::Diagnostic
 
         if (mObjDetRunning)
         {
-          double freq = 1000. / mObjDetPeriodMean_msec->getMean();
-          double freq_perc = 100. * freq / mPubFrameRate;
+          freq = 1000. / mObjDetPeriodMean_msec->getMean();
+          freq_perc = 100. * freq / mPubFrameRate;
           stat.addf("Object detection", "Mean Frequency: %.3f Hz  (%.1f%%)", freq, freq_perc);
         }
         else
@@ -4918,7 +4893,8 @@ bool ZEDWrapperNodelet::on_set_roi(zed_interfaces::set_roi::Request& req, zed_in
   // Create mask
   NODELET_INFO(" * Setting ROI");
   std::vector<sl::float2> sl_poly;
-  std::string log_msg = parseRoiPoly(parsed_poly, sl_poly);
+  //std::string log_msg = 
+  parseRoiPoly(parsed_poly, sl_poly);
   // NODELET_INFO_STREAM(" * Parsed ROI: " << log_msg.c_str());
   sl::Resolution resol(mCamWidth, mCamHeight);
   sl::Mat roi_mask(resol, sl::MAT_TYPE::U8_C1, sl::MEM::CPU);
@@ -5217,7 +5193,7 @@ void ZEDWrapperNodelet::clickedPtCallback(geometry_msgs::PointStampedConstPtr ms
 {
   // ----> Check for result subscribers
   uint32_t markerSubNumber = mPubMarker.getNumSubscribers();
-  uint32_t planeSubNumber = mPubMarker.getNumSubscribers();
+  uint32_t planeSubNumber = mPubPlane.getNumSubscribers();
 
   if ((markerSubNumber + planeSubNumber) == 0)
   {
@@ -5276,7 +5252,7 @@ void ZEDWrapperNodelet::clickedPtCallback(geometry_msgs::PointStampedConstPtr ms
   float c_x = zedParam.left_cam.cx;
   float c_y = zedParam.left_cam.cy;
 
-  float out_scale_factor = mMatResol.width / mCamWidth;
+  float out_scale_factor = static_cast<float>(mMatResol.width) / mCamWidth;
 
   float u = ((camX / camZ) * f_x + c_x) / out_scale_factor;
   float v = ((camY / camZ) * f_y + c_y) / out_scale_factor;
@@ -5654,7 +5630,6 @@ void ZEDWrapperNodelet::processPose()
       tr_2d.setZ(mFixedZValue);
       mMap2BaseTransf.setOrigin(tr_2d);
 
-      double roll, pitch, yaw;
       tf2::Matrix3x3(mMap2BaseTransf.getRotation()).getRPY(roll, pitch, yaw);
 
       tf2::Quaternion quat_2d;
@@ -5669,8 +5644,6 @@ void ZEDWrapperNodelet::processPose()
     NODELET_DEBUG("*** Base POSE [%s -> %s] - {%.3f,%.3f,%.3f} {%.3f,%.3f,%.3f}", mMapFrameId.c_str(),
                   mBaseFrameId.c_str(), mMap2BaseTransf.getOrigin().x(), mMap2BaseTransf.getOrigin().y(),
                   mMap2BaseTransf.getOrigin().z(), roll * RAD2DEG, pitch * RAD2DEG, yaw * RAD2DEG);
-
-    bool initOdom = false;
 
     // Transformation from map to odometry frame
     mOdomMutex.lock();  //
