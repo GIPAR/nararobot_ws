@@ -1,4 +1,6 @@
-# NARAROBOT 
+# NARAROBOT
+
+⚠️ **ESTE REPOSITÓRIO FOI ADAPTADO PARA FUNCIONAR NA 👉 JETSON AGX ORIN 64GB 👈 CONFORME DESCRITO NA SEÇÃO 1 E 2 ABAIXO, PARA OUTROS MODELOS PODE HAVER ERROS** ⚠️
 
 ## 1 Hardware
 - Jetson AGX Orin 64GB;
@@ -12,6 +14,7 @@
 - Ubuntu 20.04;
 - Python 3.8;
 - JetPack 5.1.1 (L4T 35.3);
+- CUDA 11.4;
 - PyTorch v2.0.0;
 - torchvision v0.15;
 - ROS Noetic;
@@ -77,6 +80,30 @@ source ~/perception/bin/activate
 ```
 deactivate
 ```
+8) Instalação do SDK da ZED
+   
+Primeiro baixe o arquivo do SDK:
+```
+https://download.stereolabs.com/zedsdk/4.1/l4t35.3/jetsons?_gl=1*1vq8lp4*_gcl_au*Mjc4MDIyMDkzLjE3MTI3OTY4MTA.
+```
+
+Vá para a pasta onde o SDK foi baixado:
+```
+cd path/to/download/folder
+```
+
+Adicione permissão de execução ao arquivo do SDK:
+```
+chmod +x ZED_SDK_Tegra_L4T35.3_v4.1.2.zstd.run
+```
+
+Execute-o:
+```
+./ZED_SDK_Tegra_L4T35.3_v4.1.2.zstd.run
+```
+
+Siga o passo a passo da instalação.
+
 
 ### 3.2 Clone os diretórios do NARAROBOT
 
@@ -93,7 +120,47 @@ cd nara_install
 ./install
 ```
 
-### 3.4 Carregando o código para o Arduino
+### 3.4 Configurar o acesso remoto
+
+*Recomenda-se reservar o IP do robô e do computador de desenvolvimento no roteador*
+
+1) Primeiro, descubra o endereço IP do computador do seu robô e do computador de desenvolvimento:
+
+```
+ifconfig
+```
+
+2) Caso não esteja instalado execute o seguinte comando:
+
+```
+sudo apt install net-tools
+```
+
+3) Adicionar configurações no arquivo .bashrc:
+
+No robô:
+
+```
+echo "export ROS_MASTER_URI=http://<robot-ip>:11311" >> ~/.bashrc
+echo "export ROS_HOSTNAME=<robot-ip>" >> ~/.bashrc
+source ~/.bashrc
+```
+
+No computador de desenvolvimento:
+
+```
+echo "export ROS_MASTER_URI=http://<robot-ip>:11311" >> ~/.bashrc
+echo "export ROS_HOSTNAME=<devcom-ip>" >> ~/.bashrc
+source ~/.bashrc
+```
+
+4) Acessar o robô via SSH:
+
+```
+ssh -X usuariorobo@ip-remoto-robo
+```
+
+### 3.5 Carregando o código para o Arduino
 
 Instale a IDE do arduino através do site oficial, em seguida vá até o diretório "nararobot_ws/src/nararobot/arduino/nara2" e inicie o arquivo "nara2.ino".
 Ao iniciar a ide, clique em "arquivos > preferencias" e modifique o local do sketchbook para a pasta "nararobot_ws/src/nararobot/arduino", assim será possível carregar todas as bibliotecas necessárias.
@@ -150,34 +217,7 @@ Identifique a localização desejada no mapa e arraste para a direção que voc�
 
 ## 6 Percepção
 
-### 6.1 Instalação do SDK da ZED:
-
-1) Primeiro baixe o arquivo do SDK:
-```
-https://download.stereolabs.com/zedsdk/4.1/l4t35.3/jetsons?_gl=1*1vq8lp4*_gcl_au*Mjc4MDIyMDkzLjE3MTI3OTY4MTA.
-```
-2) Vá para a pasta onde o SDK foi baixado:
-```
-cd path/to/download/folder
-```
-
-3) Adicione permissão de execução ao arquivo do SDK:
-```
-chmod +x ZED_SDK_Tegra_L4T35.3_v4.1.2.zstd.run
-```
-
-4) Execute-o:
-```
-./ZED_SDK_Tegra_L4T35.3_v4.1.2.zstd.run
-```
-
-Siga o passo a passo da instalação.
-
-### 6.2 Inicialização do launch da ZED 2i:
-```
-roslaunch zed_wrapper zed2i.launch
-```
-### 6.3 Instalação dos requerimentos do YOLOv5:
+### 6.1 Instalação dos requerimentos do YOLOv5:
 
 1) Para instalar os requerimentos do YOLO é necessário primeiro ativar o ambiente virtual criado na Seção 3.1:
 ```
@@ -197,13 +237,18 @@ cd ~/nararobot_ws
 catkin_make
 ```
 
-### 6.4 Inicialização do YOLOv5:
+### 6.2 Inicialização do launch da ZED 2i:
+```
+roslaunch zed_wrapper zed2i.launch
+```
+
+### 6.3 Inicialização do YOLOv5:
 ⚠️Antes de iniciar o YOLO é necessário ativar o ambiente virtual para poder usá-lo⚠️
 ```
 roslaunch yolov5_ros yolov5.launch
 ```
 
-### 6.5 Inicialização do Finder v3
+### 6.4 Inicialização do Finder v3
 ⚠️Para iniciar o Finder deve usar um terminal com o ambiente virtual desativado⚠️
 ```
 cd ~/nararobot_ws/src/Finder_v3/Finder_3.0
