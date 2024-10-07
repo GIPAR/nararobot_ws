@@ -10,6 +10,10 @@
 - ZED 2i;
 - Ponte H BTS7960.
 
+# Segue abaixo o esquematico de ligação da cadeira de rodas Nara:
+
+<img src="Jetson AGX Orin 64gb.png" alt="esquematico">
+
 ## 2 Software
 - Ubuntu 20.04;
 - Python 3.8;
